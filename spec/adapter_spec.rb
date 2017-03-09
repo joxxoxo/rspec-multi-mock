@@ -13,7 +13,7 @@ describe MultiMock::Adapter do
       Object.expects(:hello).never
        begin
          Object.hello
-         fail "Expected to raise Mocha::ExpectationError"
+         raise "Expected to raise Mocha::ExpectationError"
        rescue Mocha::ExpectationError
        end
     end
@@ -40,7 +40,7 @@ describe MultiMock::Adapter do
 
       Object.hello
 
-      Object.should have_received(:hello)
+      expect(Object).to have_received(:hello)
     end
 
     it "is setting up data for next spec" do
@@ -84,9 +84,11 @@ describe MultiMock::Adapter do
     end
 
     it "should verify the proxied expectation" do
-      Object.should_receive(:hello).never
+      expect(Object).not_to receive(:hello)
 
-      lambda { Object.hello }.should raise_error(RSpec::Mocks::MockExpectationError)
+      expect { Object.hello }.to fail
+      # expect { Object.hello }.to raise_error(RSpec::Mocks::MockExpectationError)
+      # expect { Object.hello }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 
     it "is setting up data for next spec" do
